@@ -9,7 +9,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
      * 根据用户姓名查询用户列表
-     * 
+     *
      * @param name
      * @param pageable
      * @return
