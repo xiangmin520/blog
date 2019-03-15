@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * 用户Service
+ */
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class UserService {
