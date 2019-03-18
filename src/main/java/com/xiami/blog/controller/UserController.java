@@ -1,7 +1,9 @@
 package com.xiami.blog.controller;
 
+import com.xiami.blog.domain.Authority;
 import com.xiami.blog.domain.User;
 import com.xiami.blog.exception.ConstraintViolationExceptionHandler;
+import com.xiami.blog.service.AuthorityService;
 import com.xiami.blog.service.UserService;
 import com.xiami.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.ConstraintViolationException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +31,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthorityService authorityService;
 
     /**
      * 获取 form 表单页面
@@ -47,8 +54,12 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Response> create(User user) {
+    public ResponseEntity<Response> create(User user, Long authorityId) {
         try {
+            List<Authority> authorities = new ArrayList<>();
+            authorities.add(authorityService.getAuthorityById(authorityId));
+            user.setAuthorities(authorities);
+
             userService.saveUser(user);
             return ResponseEntity.ok().body(new Response(true, "处理成功", user));
         } catch (ConstraintViolationException e) {
