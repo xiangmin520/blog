@@ -1,6 +1,11 @@
 package com.xiami.blog.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.xiami.blog.domain.Authority;
 import com.xiami.blog.domain.User;
+import com.xiami.blog.service.AuthorityService;
 import com.xiami.blog.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,8 +19,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class MainController {
 
+    private static final Long ROLE_USER_AUTHORITY_ID = 2L;
+
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AuthorityService authorityService;
 
     @GetMapping("/")
     public String root() {
@@ -55,6 +65,10 @@ public class MainController {
      */
     @PostMapping("/register")
     public String registerUser(User user) {
+        List<Authority> authorities = new ArrayList<>();
+        authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID));
+        user.setAuthorities(authorities);
+
         userService.saveUser(user);
         return "redirect:/login";
     }
